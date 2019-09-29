@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context="com.example.asus.PerfectCircleITProject.DrawActivity"
+    android:id="@+id/knopochki"
+    tools:ignore="InvalidId"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+
+        <Button
+            android:layout_width="195dp"
+            android:layout_height="50dp"
+            android:text="Ластик"
+            android:textSize="20dp"
+            android:id="@+id/lastic"
+            android:onClick="eraserMethod"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Закончить"
+            android:textSize="20dp"
+            android:id="@+id/saveimage"
+            android:onClick="finishMethod"/>
+
+    </LinearLayout>
+    <view
+    class="com.example.asus.PerfectCircleITProject.DrawActivity$GraphicsView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+        android:id="@+id/chtoeto">
+    </view>
+
+</LinearLayout>

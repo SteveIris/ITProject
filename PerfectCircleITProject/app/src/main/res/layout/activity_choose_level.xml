@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.asus.PerfectCircleITProject.MainActivity">
+
+    <Button
+        android:id="@+id/buttoneasy"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp"
+        android:background="@android:color/holo_orange_light"
+        android:text="Лёгкий"
+        android:textSize="36dp"
+        android:onClick="easyPlay"
+        />
+
+    <Button
+        android:id="@+id/buttonmedium"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="310dp"
+        android:background="@android:color/holo_orange_dark"
+        android:text="Средний"
+        android:textSize="36dp"
+        android:onClick="mediumPlay"
+        />
+
+    <Button
+        android:id="@+id/buttonhard"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="420dp"
+        android:background="@android:color/holo_red_light"
+        android:text="Сложный"
+        android:textSize="36dp"
+        android:onClick="hardPlay"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:text="ВЫБЕРИТЕ УРОВЕНЬ СЛОЖНОСТИ:"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_dark"
+        android:textSize="30dp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
