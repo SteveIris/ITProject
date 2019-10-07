@@ -18,6 +18,7 @@ public class DrawActivity extends AppCompatActivity {
     LinearLayout buttonsLayout;
     private Button eraser;
     private String difficulty;
+    private CreatedImageShapes shapesList;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,12 +137,13 @@ public class DrawActivity extends AppCompatActivity {
             }
         };
         grr = new GraphicsView(this, atrs);
-        grr = (GraphicsView) findViewById(R.id.chtoeto);
+        grr = (GraphicsView) findViewById(R.id.drawSpace);
         setContentView(R.layout.activity_draw);
         buttonsLayout = (LinearLayout)findViewById(R.id.knopochki);
         eraser = (Button)findViewById(R.id.lastic);
         Intent receivedFromCreateImage = getIntent();
         difficulty = receivedFromCreateImage.getStringExtra("levelHardness");
+        shapesList = (CreatedImageShapes) receivedFromCreateImage.getSerializableExtra("ShapesList");
     }
 
     public void onBackPressed() {
@@ -183,6 +185,7 @@ public class DrawActivity extends AppCompatActivity {
             receiver.picture2 = pic;
             Intent ItogActivity = new Intent(DrawActivity.this, ItogActivity.class);
             ItogActivity.putExtra("levelHardness", difficulty);
+            ItogActivity.putExtra("ShapesList", shapesList);
             startActivity(ItogActivity);
         };
     }

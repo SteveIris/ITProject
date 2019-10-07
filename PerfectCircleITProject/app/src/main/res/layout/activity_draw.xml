@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/knopochki"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@android:color/darker_gray"
+    android:orientation="vertical"
     tools:context="com.example.asus.PerfectCircleITProject.DrawActivity"
-    android:id="@+id/knopochki"
-    tools:ignore="InvalidId"
-    android:orientation="vertical">
+    tools:ignore="InvalidId">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,27 +16,27 @@
 
 
         <Button
+            android:id="@+id/lastic"
             android:layout_width="195dp"
             android:layout_height="50dp"
+            android:onClick="eraserMethod"
             android:text="Ластик"
-            android:textSize="20dp"
-            android:id="@+id/lastic"
-            android:onClick="eraserMethod"/>
+            android:textSize="20dp" />
 
         <Button
+            android:id="@+id/saveimage"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:onClick="finishMethod"
             android:text="Закончить"
-            android:textSize="20dp"
-            android:id="@+id/saveimage"
-            android:onClick="finishMethod"/>
+            android:textSize="20dp" />
 
     </LinearLayout>
+
     <view
-    class="com.example.asus.PerfectCircleITProject.DrawActivity$GraphicsView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-        android:id="@+id/chtoeto">
-    </view>
+        android:id="@+id/drawSpace"
+        class="com.example.asus.PerfectCircleITProject.DrawActivity$GraphicsView"
+        android:layout_width="411dp"
+        android:layout_height="581dp"></view>
 
 </LinearLayout>

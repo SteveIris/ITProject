@@ -31,7 +31,7 @@ public class CameraActivity extends AppCompatActivity {
         //Log.d("Sohowlongisit", image.getMaxWidth()+" "+image.getMaxHeight());
         currentPhotoPath = new String();
         dispatchTakePictureIntent();
-        setPic();
+        //setPic();
     }
 
     private File createImageFile() throws IOException {
@@ -70,12 +70,16 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == reqCode && resultCode == RESULT_OK) {
-            bitmap = BitmapFactory.decodeFile(currentPhotoPath);
-            image.setImageBitmap(bitmap);
+            bmOptions = new BitmapFactory.Options();
+            bmOptions.inJustDecodeBounds = false;
+            bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+            Log.d("Sotherazmeris", ""+bitmap.getHeight()+" "+bitmap.getWidth());
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 900, 900, false);
+            image.setImageBitmap(scaledBitmap);
         }
     }
 
-    private void setPic() {
+   /* private void setPic() {
         int targetW = 1080;
         int targetH = 1920;
 
@@ -93,6 +97,6 @@ public class CameraActivity extends AppCompatActivity {
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
     }
-
+*/
 
 }

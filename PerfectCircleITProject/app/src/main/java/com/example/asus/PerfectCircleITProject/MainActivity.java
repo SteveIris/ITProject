@@ -1,6 +1,7 @@
 package com.example.asus.PerfectCircleITProject;
 
 import android.content.pm.ActivityInfo;
+import android.graphics.Camera;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;

@@ -129,17 +129,28 @@ public class CreateImageActivity extends AppCompatActivity {
             treugolnik.lineTo(x3, y3);
             treugolnik.lineTo(x1, y1);
             imageCanvas.drawPath(treugolnik, paint);
+            shapesList.triangleX1=x1;
+            shapesList.triangleX2=x2;
+            shapesList.triangleX3=x3;
+            shapesList.triangleY1=y1;
+            shapesList.triangleY2=y2;
+            shapesList.triangleY3=y3;
         }
 
         public void createCircle(){
+            shapesList.isCircle=true;
             int x, y, r;
             y = new Random().nextInt(imageBitmap.getHeight()-300)+150;
             x = new Random().nextInt(imageBitmap.getWidth()-300)+150;
             r = new Random().nextInt(Math.min(Math.abs(y- imageBitmap.getHeight()), Math.min(Math.abs(x- imageBitmap.getWidth()), Math.min(y, x)))-100)+50;
             imageCanvas.drawCircle(x, y, r, paint);
+            shapesList.circleX=x;
+            shapesList.circleY=y;
+            shapesList.circleRadius=r;
         }
 
         public void createQuadrangle(){
+            shapesList.isQuadrangle=true;
             int x1, y1, x2, y2, x3, y3, x4, y4;
             Path put = new Path();
             y1 = new Random().nextInt(imageBitmap.getHeight()-300)+150;
@@ -156,6 +167,14 @@ public class CreateImageActivity extends AppCompatActivity {
             put.lineTo(x4, y4);
             put.lineTo(x1, y1);
             imageCanvas.drawPath(put, paint);
+            shapesList.quadrangleX1=x1;
+            shapesList.quadrangleX2=x2;
+            shapesList.quadrangleX3=x3;
+            shapesList.quadrangleX4=x4;
+            shapesList.quadrangleY1=y1;
+            shapesList.quadrangleY2=y2;
+            shapesList.quadrangleY3=y3;
+            shapesList.quadrangleY4=y4;
         }
 
     }
@@ -168,7 +187,7 @@ public class CreateImageActivity extends AppCompatActivity {
         public void onFinish (){
             Intent DrawActivity = new Intent(CreateImageActivity.this, DrawActivity.class);
             DrawActivity.putExtra("levelHardness", difficulty);
-            boolean[][] pic = new boolean[imageBitmap.getWidth()][imageBitmap.getHeight()];
+            /*boolean[][] pic = new boolean[imageBitmap.getWidth()][imageBitmap.getHeight()];
             int i, j;
             for(i=0; i< imageBitmap.getWidth(); i++){
                 for(j=0; j< imageBitmap.getHeight(); j++){
@@ -185,7 +204,11 @@ public class CreateImageActivity extends AppCompatActivity {
             holder.picture1=pic;
             //DrawActivity.putExtra("width", imageBitmap.getWidth());
             //DrawActivity.putExtra("height", imageBitmap.getHeight());
-            //DrawActivity.putExtra("boo", pic);
+            //DrawActivity.putExtra("boo", pic); */
+            ImageProcessor holder = new ImageProcessor();
+            holder.w = imageBitmap.getWidth();
+            holder.h = imageBitmap.getHeight();
+            DrawActivity.putExtra("ShapesList", shapesList);
             startActivity(DrawActivity);
         }
 
