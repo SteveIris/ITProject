@@ -3,6 +3,7 @@ package com.example.asus.PerfectCircleITProject;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -23,10 +24,17 @@ public class CameraActivity extends AppCompatActivity {
     public String currentPhotoPath;
     Bitmap bitmap;
     BitmapFactory.Options bmOptions;
+    String difficulty;
+    CreatedImageShapes shapesList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        difficulty = new String();
+        shapesList = new CreatedImageShapes();
+        Intent receivedFromCreateImage = getIntent();
+        difficulty=receivedFromCreateImage.getStringExtra("LevelHardness");
+        shapesList=(CreatedImageShapes) receivedFromCreateImage.getSerializableExtra("ShapesList");
         image = findViewById(R.id.pikcha);
         //Log.d("Sohowlongisit", image.getMaxWidth()+" "+image.getMaxHeight());
         currentPhotoPath = new String();
@@ -74,8 +82,24 @@ public class CameraActivity extends AppCompatActivity {
             bmOptions.inJustDecodeBounds = false;
             bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
             Log.d("Sotherazmeris", ""+bitmap.getHeight()+" "+bitmap.getWidth());
-            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 900, 900, false);
-            image.setImageBitmap(scaledBitmap);
+            ImageProcessor receiver = new ImageProcessor();
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, receiver.w, receiver.h, false);
+            boolean[][] pic = new boolean[scaledBitmap.getWidth()][scaledBitmap.getHeight()];
+            int i, j;
+            for (i = 0; i < scaledBitmap.getWidth(); i++) {
+                for (j = 0; j < scaledBitmap.getHeight(); j++) {
+                    if (Math.abs(scaledBitmap.getPixel(i, j)-Color.BLACK)<Math.abs(scaledBitmap.getPixel(i, j)-Color.WHITE)) {
+                        pic[i][j] = true;
+                    } else {
+                        pic[i][j] = false;
+                    }
+                }
+            }
+            receiver.picture2 = pic;
+            Intent itogActivity = new Intent(CameraActivity.this, ItogActivity.class);
+            itogActivity.putExtra("LevelHardness", difficulty);
+            itogActivity.putExtra("ShapesList", shapesList);
+            startActivity(itogActivity);
         }
     }
 

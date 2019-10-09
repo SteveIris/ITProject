@@ -25,6 +25,7 @@ public class CreateImageActivity extends AppCompatActivity {
     TextView timeLeftText;
     MyCountDownTimer timer;
     static String difficulty;
+    static String dawae;
     static public Bitmap imageBitmap;
     static public Canvas imageCanvas;
     static public CreatedImageShapes shapesList;
@@ -35,8 +36,9 @@ public class CreateImageActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_create_image);
         shapesList = new CreatedImageShapes();
-        Intent receivedFromChooseLevel = getIntent();
-        difficulty = receivedFromChooseLevel.getStringExtra("LevelHardness");
+        Intent receivedFromChooseWay = getIntent();
+        dawae = receivedFromChooseWay.getStringExtra("TheWayYouDraw");
+        difficulty = receivedFromChooseWay.getStringExtra("LevelHardness");
         timeLeftText =findViewById(R.id.sekunda);
         timer = new MyCountDownTimer(10000, 1000);
         timer.start();
@@ -185,8 +187,6 @@ public class CreateImageActivity extends AppCompatActivity {
         }
 
         public void onFinish (){
-            Intent DrawActivity = new Intent(CreateImageActivity.this, DrawActivity.class);
-            DrawActivity.putExtra("levelHardness", difficulty);
             /*boolean[][] pic = new boolean[imageBitmap.getWidth()][imageBitmap.getHeight()];
             int i, j;
             for(i=0; i< imageBitmap.getWidth(); i++){
@@ -208,8 +208,17 @@ public class CreateImageActivity extends AppCompatActivity {
             ImageProcessor holder = new ImageProcessor();
             holder.w = imageBitmap.getWidth();
             holder.h = imageBitmap.getHeight();
-            DrawActivity.putExtra("ShapesList", shapesList);
-            startActivity(DrawActivity);
+            if(dawae.equals("Camera")){
+                Intent cameraActivity = new Intent(CreateImageActivity.this, CameraActivity.class);
+                cameraActivity.putExtra("LevelHardness", difficulty);
+                cameraActivity.putExtra("ShapesList", shapesList);
+                startActivity(cameraActivity);
+            } else {
+                Intent DrawActivity = new Intent(CreateImageActivity.this, DrawActivity.class);
+                DrawActivity.putExtra("LevelHardness", difficulty);
+                DrawActivity.putExtra("ShapesList", shapesList);
+                startActivity(DrawActivity);
+            };
         }
 
         public void onTick (long millisUntilFinished){

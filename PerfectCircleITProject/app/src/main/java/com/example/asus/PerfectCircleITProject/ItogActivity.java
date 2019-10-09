@@ -21,22 +21,23 @@ public class ItogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_itog);
         int res, i, j;
         ImageProcessor getpicture1 = new ImageProcessor();
-        new Thread(new Runnable() {
-            public void run() {
-                ImageProcessor getpicture = new ImageProcessor();
+        //new Thread(new Runnable() {
+            //public void run() {
+                //ImageProcessor getpicture = new ImageProcessor();
                 //getpicture.obrabotka3();
-            }}).start();
+            //}}).start();
         Intent receivedFromDraw = getIntent();
-        difficulty = receivedFromDraw.getStringExtra("levelHardness");
+        difficulty = receivedFromDraw.getStringExtra("LevelHardness");
         shapesList = (CreatedImageShapes) receivedFromDraw.getSerializableExtra("ShapesList");
         TextView hardnessInfo = findViewById(R.id.hardnessinfo);
         hardnessInfo.setText("Сложность: "+ difficulty);
-        Bitmap created = Bitmap.createBitmap((getpicture1.w/2)+1, (getpicture1.h/2)+1, Bitmap.Config.RGB_565);
+        Bitmap created = Bitmap.createBitmap(getpicture1.w, getpicture1.h, Bitmap.Config.RGB_565);
         Bitmap drawn = Bitmap.createBitmap((getpicture1.w/2)+1, (getpicture1.h/2)+1, Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(created);
         Canvas canvaz = new Canvas();
         canvas.drawColor(Color.WHITE);
-        canvas = shapesList.createCanvas(20);
+        canvas = shapesList.createCanvas(20, created);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(created, (getpicture1.w/2)+1, (getpicture1.h/2)+1, false);
         /*Paint paint = new Paint ();
         paint.setAntiAlias(true);
         paint.setStrokeWidth(20);
@@ -61,7 +62,7 @@ public class ItogActivity extends AppCompatActivity {
         }
         ImageView createdimage = findViewById(R.id.created);
         ImageView drawnimage = findViewById(R.id.drawn);
-        createdimage.setImageBitmap(created);
+        createdimage.setImageBitmap(scaledBitmap);
         drawnimage.setImageBitmap(drawn);
     }
 

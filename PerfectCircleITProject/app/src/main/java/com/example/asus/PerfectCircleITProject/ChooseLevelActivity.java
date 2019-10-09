@@ -7,28 +7,28 @@ import android.view.View;
 import android.content.*;
 
 public class ChooseLevelActivity extends AppCompatActivity {
-    Intent createImageActivity;
+    Intent chooseWayActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_choose_level);
-        createImageActivity = new Intent(ChooseLevelActivity.this, CreateImageActivity.class);
+        chooseWayActivity = new Intent(ChooseLevelActivity.this, ChooseWayActivity.class);
     }
 
 
     public void easyPlay(View view) {
-        createImageActivity.putExtra("LevelHardness", "Easy");
-        startActivity(createImageActivity);
+        chooseWayActivity.putExtra("LevelHardness", "Easy");
+        startActivity(chooseWayActivity);
     }
 
     public void hardPlay(View view) {
-        createImageActivity.putExtra("LevelHardness", "Hard");
-        startActivity(createImageActivity);
+        chooseWayActivity.putExtra("LevelHardness", "Hard");
+        startActivity(chooseWayActivity);
     }
 
     public void mediumPlay(View view) {
-        createImageActivity.putExtra("LevelHardness", "Medium");
-        startActivity(createImageActivity);
+        chooseWayActivity.putExtra("LevelHardness", "Medium");
+        startActivity(chooseWayActivity);
     }
 }

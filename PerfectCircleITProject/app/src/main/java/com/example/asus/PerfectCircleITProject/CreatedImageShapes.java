@@ -1,5 +1,6 @@
 package com.example.asus.PerfectCircleITProject;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -17,8 +18,8 @@ public class CreatedImageShapes implements Serializable {
     int triangleX1, triangleY1, triangleX2, triangleY2, triangleX3, triangleY3;
     int quadrangleX1, quadrangleY1, quadrangleX2, quadrangleY2, quadrangleX3, quadrangleY3, quadrangleX4, quadrangleY4;
 
-    public Canvas createCanvas (int strokeWidth){
-        Canvas canvas = new Canvas();
+    public Canvas createCanvas (int strokeWidth, Bitmap bitmap){
+        Canvas canvas = new Canvas(bitmap);
         canvas.drawColor(Color.WHITE);
         Paint paint = new Paint ();
         paint.setAntiAlias(true);
@@ -33,9 +34,9 @@ public class CreatedImageShapes implements Serializable {
         if(isTriangle){
             Path trianglePath = new Path();
             trianglePath.moveTo(triangleX1, triangleY1);
-            trianglePath.moveTo(triangleX2, triangleY2);
-            trianglePath.moveTo(triangleX3, triangleY3);
-            trianglePath.moveTo(triangleX1, triangleY1);
+            trianglePath.lineTo(triangleX2, triangleY2);
+            trianglePath.lineTo(triangleX3, triangleY3);
+            trianglePath.lineTo(triangleX1, triangleY1);
             canvas.drawPath(trianglePath, paint);
         }
         if(isRectangle){
@@ -44,10 +45,10 @@ public class CreatedImageShapes implements Serializable {
         if(isQuadrangle){
             Path quadranglePath = new Path();
             quadranglePath.moveTo(quadrangleX1, quadrangleY1);
-            quadranglePath.moveTo(quadrangleX2, quadrangleY2);
-            quadranglePath.moveTo(quadrangleX3, quadrangleY3);
-            quadranglePath.moveTo(quadrangleX4, quadrangleY4);
-            quadranglePath.moveTo(quadrangleX1, quadrangleY1);
+            quadranglePath.lineTo(quadrangleX2, quadrangleY2);
+            quadranglePath.lineTo(quadrangleX3, quadrangleY3);
+            quadranglePath.lineTo(quadrangleX4, quadrangleY4);
+            quadranglePath.lineTo(quadrangleX1, quadrangleY1);
             canvas.drawPath(quadranglePath, paint);
         }
         return canvas;

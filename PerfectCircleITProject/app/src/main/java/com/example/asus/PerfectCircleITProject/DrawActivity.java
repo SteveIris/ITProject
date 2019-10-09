@@ -142,7 +142,7 @@ public class DrawActivity extends AppCompatActivity {
         buttonsLayout = (LinearLayout)findViewById(R.id.knopochki);
         eraser = (Button)findViewById(R.id.lastic);
         Intent receivedFromCreateImage = getIntent();
-        difficulty = receivedFromCreateImage.getStringExtra("levelHardness");
+        difficulty = receivedFromCreateImage.getStringExtra("LevelHardness");
         shapesList = (CreatedImageShapes) receivedFromCreateImage.getSerializableExtra("ShapesList");
     }
 
@@ -184,7 +184,7 @@ public class DrawActivity extends AppCompatActivity {
             }
             receiver.picture2 = pic;
             Intent ItogActivity = new Intent(DrawActivity.this, ItogActivity.class);
-            ItogActivity.putExtra("levelHardness", difficulty);
+            ItogActivity.putExtra("LevelHardness", difficulty);
             ItogActivity.putExtra("ShapesList", shapesList);
             startActivity(ItogActivity);
         };
