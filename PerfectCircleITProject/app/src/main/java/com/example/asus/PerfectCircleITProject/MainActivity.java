@@ -15,7 +15,10 @@ import android.content.*;
 public class MainActivity extends AppCompatActivity {
     AlertDialog.Builder welcomeWindow;
     AlertDialog.Builder newsWindow;
+    AlertDialog.Builder askCameraPermissionWindow;
+    AlertDialog.Builder explanationWindow;
     SharedPreferences preferences = null;
+    int denied=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,10 +29,11 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
-        if (preferences.getBoolean("firstrun1", true)) {
+        if (preferences.getBoolean("firstrun4", true)) {
             showNewsMessage();
+            askCameraPermission();
             showWelcomeMessage();
-            preferences.edit().putBoolean("firstrun1", false).commit();
+            preferences.edit().putBoolean("firstrun4", false).commit();
         }
     }
 
@@ -73,6 +77,46 @@ public class MainActivity extends AppCompatActivity {
                 });
         newsWindow.show();
     }
+
+    public void askCameraPermission (){
+        askCameraPermissionWindow = new AlertDialog.Builder(MainActivity.this);
+        askCameraPermissionWindow.setTitle("Разрешить приложению доступ к камере?");
+        askCameraPermissionWindow.setNegativeButton("Да",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //NothingHappens
+                    }
+                });
+        askCameraPermissionWindow.setPositiveButton("Нет",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        explanation();
+                    }
+                });
+        askCameraPermissionWindow.show();
+    }
+
+    public void explanation (){
+        explanationWindow = new AlertDialog.Builder(MainActivity.this);
+        explanationWindow.setTitle("Разрешить приложению доступ к камере?");
+        explanationWindow.setMessage("Если у приложения не будет доступа к камере, вы потеряете возможность"+
+                "оценивать рисунки, нарисованные на бумаге. Разрешить доступ к камере?");
+        explanationWindow.setNegativeButton("Да",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //LolNothingHappensAgain
+                    }
+                });
+        explanationWindow.setPositiveButton("Нет",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        preferences.edit().putBoolean("CamPermission1", false).commit();
+                    }
+                });
+        explanationWindow.show();
+    }
+
+
 
     public void playMethod(View view) {
         Intent ChooseLevelActivity = new Intent(MainActivity.this, ChooseLevelActivity.class);
