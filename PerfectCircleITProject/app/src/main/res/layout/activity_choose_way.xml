@@ -10,11 +10,11 @@
     <Button
         android:id="@+id/cameraButton"
         android:layout_width="300dp"
-        android:layout_height="250dp"
+        android:layout_height="150dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:text="КАМЕРА"
+        android:layout_marginTop="170dp"
+        android:text="Бумага"
         android:textSize="50dp"
         android:onClick="cameraMethod">
 
@@ -23,14 +23,26 @@
     <Button
         android:id="@+id/screenButton"
         android:layout_width="300dp"
-        android:layout_height="250dp"
+        android:layout_height="150dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="170dp"
         android:text="ЭКРАН"
         android:textSize="50dp"
         android:onClick="screenMethod">
 
     </Button>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:fontFamily="casual"
+        android:text="Выберите, на чём будете рисовать:"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="30dp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

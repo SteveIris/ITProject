@@ -2,6 +2,7 @@ package com.example.asus.PerfectCircleITProject;
 
 import android.content.*;
 import android.content.pm.ActivityInfo;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.graphics.*;
@@ -14,16 +15,32 @@ import android.widget.Button;
 public class DrawActivity extends AppCompatActivity {
     static private Bitmap imageBitmap;
     static float x, y, i=0;
-    static boolean isEraser =false, isFinished =false;
+    static boolean isEraser =false;
+    boolean isFinished =false;
     LinearLayout buttonsLayout;
     private Button eraser;
     private String difficulty;
     private CreatedImageShapes shapesList;
+    AlertDialog.Builder finishWindow;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        isFinished=false;
+        finishWindow=new AlertDialog.Builder(DrawActivity.this);
+        finishWindow.setTitle("Завершение рисования");
+        finishWindow.setMessage("Вы уверены, что хотите завершить?");
+        finishWindow.setNegativeButton("Нет", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int arg1) {
+                //LiterallyNothingHappens!
+            }
+        });
+        finishWindow.setPositiveButton("Да", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int arg1) {
+                nextActivity();
+            }
+        });
         GraphicsView grr;
         AttributeSet atrs = new AttributeSet() {
             @Override
@@ -164,15 +181,16 @@ public class DrawActivity extends AppCompatActivity {
     }
 
     public void finishMethod(View view) {
-        if(!isFinished) {
-            isFinished = true;
+        finishWindow.show();
+    }
+
+    public void nextActivity (){
             boolean[][] pic = new boolean[imageBitmap.getWidth()][imageBitmap.getHeight()];
             int i, j;
             for (i = 0; i < imageBitmap.getWidth(); i++) {
                 for (j = 0; j < imageBitmap.getHeight(); j++) {
                     if (imageBitmap.getPixel(i, j) == Color.BLACK) {
                         pic[i][j] = true;
-
                     } else {
                         pic[i][j] = false;
                     }
@@ -187,7 +205,6 @@ public class DrawActivity extends AppCompatActivity {
             ItogActivity.putExtra("LevelHardness", difficulty);
             ItogActivity.putExtra("ShapesList", shapesList);
             startActivity(ItogActivity);
-        };
     }
 
     static public class GraphicsView extends View{

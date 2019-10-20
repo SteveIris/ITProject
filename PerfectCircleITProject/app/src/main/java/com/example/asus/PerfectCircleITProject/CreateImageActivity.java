@@ -13,6 +13,7 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -208,6 +209,7 @@ public class CreateImageActivity extends AppCompatActivity {
             ImageProcessor holder = new ImageProcessor();
             holder.w = imageBitmap.getWidth();
             holder.h = imageBitmap.getHeight();
+            Log.d("AHA", imageBitmap.getWidth()+ " "+imageBitmap.getHeight());
             if(dawae.equals("Camera")){
                 Intent cameraActivity = new Intent(CreateImageActivity.this, CameraActivity.class);
                 cameraActivity.putExtra("LevelHardness", difficulty);

@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,11 +22,6 @@ public class ItogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_itog);
         int res, i, j;
         ImageProcessor getpicture1 = new ImageProcessor();
-        //new Thread(new Runnable() {
-            //public void run() {
-                //ImageProcessor getpicture = new ImageProcessor();
-                //getpicture.obrabotka3();
-            //}}).start();
         Intent receivedFromDraw = getIntent();
         difficulty = receivedFromDraw.getStringExtra("LevelHardness");
         shapesList = (CreatedImageShapes) receivedFromDraw.getSerializableExtra("ShapesList");
@@ -38,6 +34,25 @@ public class ItogActivity extends AppCompatActivity {
         canvas.drawColor(Color.WHITE);
         canvas = shapesList.createCanvas(20, created);
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(created, (getpicture1.w/2)+1, (getpicture1.h/2)+1, false);
+        boolean[][] pic = new boolean[getpicture1.w][getpicture1.h];
+        for(i=0;i<getpicture1.w;i++){
+            for(j=0;j<getpicture1.h;j++){
+                if(created.getPixel(i, j)==Color.BLACK){
+                    pic[i][j]=true;
+                } else {
+                    pic[i][j]=false;
+                }
+            }
+        }
+        getpicture1.picture1=pic;
+        new Thread(new Runnable() {
+            public void run() {
+                int result;
+                TextView ocenka = findViewById(R.id.ozenka);
+                ImageProcessor getpicture = new ImageProcessor();
+                result=getpicture.compare4();
+                ocenka.setText("ОЦЕНКА: " + result);
+            }}).start();
         /*Paint paint = new Paint ();
         paint.setAntiAlias(true);
         paint.setStrokeWidth(20);
@@ -74,4 +89,8 @@ public class ItogActivity extends AppCompatActivity {
         */
     }
 
+    public void backToMenuMethod(View view) {
+        Intent MainActivity = new Intent(ItogActivity.this, MainActivity.class);
+        startActivity(MainActivity);
+    }
 }

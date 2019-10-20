@@ -24,7 +24,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="310dp"
         android:background="@android:color/holo_blue_bright"
-        android:text="Статистика"
+        android:text="История"
         android:textSize="36dp"
         android:onClick="statsMethod"/>
 

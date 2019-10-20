@@ -4,32 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
     android:orientation="vertical"
     tools:context="com.example.asus.PerfectCircleITProject.ItogActivity">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Сложность: ОБРАБАТЫВАЕТСЯ"
-        android:textColor="@android:color/background_dark"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:id="@+id/hardnessinfo"/>
+        android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/created"/>
+            android:orientation="horizontal">
 
-        <ImageView
+            <ImageView
+                android:id="@+id/created"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="1dp" />
+
+            <ImageView
+                android:id="@+id/drawn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/hardnessinfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/drawn"/>
+            android:text="Сложность: ОБРАБАТЫВАЕТСЯ"
+            android:textColor="@android:color/background_dark"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ozenka"
+            android:textColor="@android:color/background_dark"
+            android:textSize="30sp"
+            android:textStyle="bold"/>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/backToMenuButton"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="160dp"
+        android:text="В главное меню"
+        android:onClick="backToMenuMethod"/>
 
 </LinearLayout>

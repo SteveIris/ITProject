@@ -8,20 +8,20 @@
 
     <Button
         android:id="@+id/buttoneasy"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_width="340dp"
+        android:layout_height="60dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="200dp"
         android:background="@android:color/holo_orange_light"
-        android:text="Лёгкий"
+        android:text="Тренировочный"
         android:textSize="36dp"
         android:onClick="easyPlay"
         />
 
     <Button
         android:id="@+id/buttonmedium"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_width="340dp"
+        android:layout_height="60dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="310dp"
         android:background="@android:color/holo_orange_dark"
@@ -32,8 +32,8 @@
 
     <Button
         android:id="@+id/buttonhard"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_width="340dp"
+        android:layout_height="60dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="420dp"
         android:background="@android:color/holo_red_light"
