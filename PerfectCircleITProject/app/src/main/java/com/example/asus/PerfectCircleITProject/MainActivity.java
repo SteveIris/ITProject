@@ -29,11 +29,11 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
-        if (preferences.getBoolean("firstrun4", true)) {
+        if (preferences.getBoolean("isfirsttime1", true)) {
             showNewsMessage();
             askCameraPermission();
             showWelcomeMessage();
-            preferences.edit().putBoolean("firstrun4", false).commit();
+            preferences.edit().putBoolean("isfirsttime1", false).commit();
         }
     }
 
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         explanationWindow.setPositiveButton("Нет",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        preferences.edit().putBoolean("CamPermission1", false).commit();
+                        preferences.edit().putBoolean("CamPermission2", false).commit();
                     }
                 });
         explanationWindow.show();
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void exitMethod(View view) {
-        //N
+        finish();
     }
 
     public void statsMethod(View view) {

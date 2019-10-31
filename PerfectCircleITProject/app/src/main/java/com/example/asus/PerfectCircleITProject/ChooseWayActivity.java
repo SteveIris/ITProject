@@ -20,7 +20,7 @@ public class ChooseWayActivity extends AppCompatActivity {
     }
 
     public void cameraMethod(View view) {
-        if(preferences.getBoolean("CamPermission1", true)) {
+        if(preferences.getBoolean("CamPermission2", true)) {
             Intent createImageActivity = new Intent(ChooseWayActivity.this, CreateImageActivity.class);
             createImageActivity.putExtra("TheWayYouDraw", "Camera");
             createImageActivity.putExtra("LevelHardness", difficulty);

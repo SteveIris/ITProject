@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "604889477181",
+    "firebase_url": "https://perfect-circle-e975e.firebaseio.com",
+    "project_id": "perfect-circle-e975e",
+    "storage_bucket": "perfect-circle-e975e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:604889477181:android:d3afea03f555b1d1487a54",
+        "android_client_info": {
+          "package_name": "com.example.asus.PerfectCircleITProject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "604889477181-k45r12ekhsetu0034r3ku9ta81kc2vt3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.asus.PerfectCircleITProject",
+            "certificate_hash": "b311921c1b76cd3636dd1d4d45a4f72a51a8b41d"
+          }
+        },
+        {
+          "client_id": "604889477181-7pv1bsgfulchgorplkkbmsq9b2gkrfqa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqjq7u7S8W1zK5Xzh6RB9n4mynzLY7z-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "604889477181-7pv1bsgfulchgorplkkbmsq9b2gkrfqa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
