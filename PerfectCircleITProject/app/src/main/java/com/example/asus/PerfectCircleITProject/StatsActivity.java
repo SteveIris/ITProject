@@ -17,9 +17,9 @@ public class StatsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
         ArrayList <OneGameCard> oneGameCards = new ArrayList<>();
-        oneGameCards.add(new OneGameCard("HELOO", "YOLO", "WHADDAWEHAVERE"));
-        oneGameCards.add(new OneGameCard("WEHAVEAWORK", "DONEHERE", "WEREALLYHAVE"));
-        oneGameCards.add(new OneGameCard("OMG", "ITWORKS", "prbbly"));
+        oneGameCards.add(new OneGameCard("Test", "Test", "Testing"));
+        oneGameCards.add(new OneGameCard("Difficulty", "Date", "Mark"));
+        oneGameCards.add(new OneGameCard("Wow", "ItReallyWorks", "NotBad"));
         listOfGames=findViewById(R.id.listofgames);
         adapter = new RecyclerViewAdapter(oneGameCards);
         layoutManager=new LinearLayoutManager(this);
