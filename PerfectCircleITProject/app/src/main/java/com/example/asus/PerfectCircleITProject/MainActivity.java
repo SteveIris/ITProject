@@ -8,18 +8,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.content.*;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainActivity extends AppCompatActivity {
     AlertDialog.Builder welcomeWindow;
     AlertDialog.Builder newsWindow;
     AlertDialog.Builder askCameraPermissionWindow;
     AlertDialog.Builder explanationWindow;
     SharedPreferences preferences = null;
+    private FirebaseAuth auth;
     int denied=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
+        auth =FirebaseAuth.getInstance();
         preferences = getSharedPreferences("com.example.asus.PerfectCircleITProject", MODE_PRIVATE);
     }
 
@@ -120,7 +124,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void exitMethod(View view) {
-        finish();
+        auth.getInstance().signOut();
+        Intent loginActivity = new Intent (MainActivity.this, LoginActivity.class);
+        startActivity(loginActivity);
     }
 
     public void statsMethod(View view) {

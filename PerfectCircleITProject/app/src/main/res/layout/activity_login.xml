@@ -30,14 +30,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top"
-        android:hint="Электронная почта"></EditText>
+        android:hint="Электронная почта"
+        android:inputType="textEmailAddress"></EditText>
 
     <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top"
-        android:hint="Пароль"></EditText>
+        android:hint="Пароль"
+        android:inputType="textPassword"></EditText>
 
     <Button
         android:id="@+id/signInButton"
