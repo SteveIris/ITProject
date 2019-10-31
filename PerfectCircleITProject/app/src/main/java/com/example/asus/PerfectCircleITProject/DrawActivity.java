@@ -2,8 +2,8 @@ package com.example.asus.PerfectCircleITProject;
 
 import android.content.*;
 import android.content.pm.ActivityInfo;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.graphics.*;
 import android.util.AttributeSet;
