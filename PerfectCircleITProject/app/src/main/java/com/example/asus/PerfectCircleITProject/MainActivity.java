@@ -2,13 +2,21 @@ package com.example.asus.PerfectCircleITProject;
 
 import android.content.pm.ActivityInfo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.content.*;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
     AlertDialog.Builder welcomeWindow;
@@ -18,12 +26,15 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences preferences = null;
     private FirebaseAuth auth;
     int denied=0;
+    private int numberOfGames;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
         auth =FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        MyUser currentUser = new MyUser();
         preferences = getSharedPreferences("com.example.asus.PerfectCircleITProject", MODE_PRIVATE);
     }
 

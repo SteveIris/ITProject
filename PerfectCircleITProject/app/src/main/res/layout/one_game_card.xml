@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:text="Сложность: "
                 android:textColor="@android:color/background_dark"
-                android:textSize="22sp"
+                android:textSize="19sp"
                 android:textStyle="bold" />
 
             <TextView

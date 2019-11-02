@@ -17,6 +17,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -27,7 +34,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button signInButton;
     private TextView iAlreadyHaveAccountText;
     private boolean isRegistering=true;
-
+    private FirebaseFirestore database;
+    private String userEmailAdress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +46,9 @@ public class LoginActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.emailEditText);
         signInButton = findViewById(R.id.signInButton);
         iAlreadyHaveAccountText = findViewById(R.id.iAlreadyHaveAnAccount);
+        database = FirebaseFirestore.getInstance();
+        //REMOVETHIS
+        //userData.child("e").child("name").setValue("login");
         if(auth.getCurrentUser()!=null){
             Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(mainActivity);
@@ -79,17 +90,27 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
                                 Log.d("loginACC", "createUserWithEmail:success");
                                 FirebaseUser user = auth.getCurrentUser();
+                                MyUser newUser = new MyUser();
+                                newUser.emailAdress=user.getEmail();
+                                newUser.login=loginEditText.getText().toString().trim();
+                                userEmailAdress = new String();
+                                userEmailAdress=user.getEmail();
+                                userEmailAdress=userEmailAdress.substring(0, userEmailAdress.indexOf("."));
+                                Map<String, String> data = new HashMap<>();
+                                data.put("name", newUser.login);
+                                data.put("numberOfGames", "0");
+                                //userData.child(userEmailAdress).child("name").setValue(newUser.login);
+                                newUser.emailWithoutCom=userEmailAdress;
+                                //userData.child(userEmailAdress).child("numberOfGames").setValue("0");
+                                database.collection("Users").document(userEmailAdress).set(data, SetOptions.merge());
                                 Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(mainActivity);
                             } else {
-                                // If sign in fails, display a message to the user.
                                 Log.d("loginACC", "createUserWithEmail:failure", task.getException());
                                 Toast.makeText(LoginActivity.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
-                                //updateUI(null);
                             }
 
                             // ...
@@ -103,7 +124,6 @@ public class LoginActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("loginACC", "signInWithEmail:success");
-                                FirebaseUser user = auth.getCurrentUser();
                                 Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(mainActivity);
                             } else {
