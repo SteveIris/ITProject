@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
@@ -51,6 +53,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         recyclerViewHolder.difficultyText.setText(oneGameCard.getDifficultyText());
         recyclerViewHolder.markText.setText(oneGameCard.getMarkText());
         recyclerViewHolder.dateText.setText(oneGameCard.getDateText());
+        Glide.with(recyclerViewHolder.firstImage.getContext()).load(oneGameCard.getImage1Url()).into(recyclerViewHolder.firstImage);
+        Glide.with(recyclerViewHolder.secondImage.getContext()).load(oneGameCard.getImage2Url()).into(recyclerViewHolder.secondImage);
     }
 
     @Override

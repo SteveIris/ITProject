@@ -8,13 +8,18 @@ import android.graphics.Color;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,7 +32,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -42,15 +51,29 @@ public class ItogActivity extends AppCompatActivity {
     private FirebaseFirestore database;
     private int numberOfGames=0;
     private String userEmailAdress;
+    private ByteArrayOutputStream baos1;
+    private ByteArrayOutputStream baos2;
+    private Bitmap scaledBitmap;
+    private Bitmap drawn;
+    private int isReady=0;
+    private int isUploaded=0;
+    private byte[] image1data;
+    private byte[] image2data;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
+    private Map<String, String> imagesData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_itog);
+        storage = FirebaseStorage.getInstance();
+        imagesData = new HashMap<>();
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         userEmailAdress = user.getEmail().substring(0, user.getEmail().indexOf("."));
         database = FirebaseFirestore.getInstance();
+        storageRef = storage.getReference().child(userEmailAdress);
         //userData = database.getReference().child("Users").child(user.getEmail().substring(0, user.getEmail().indexOf(".")));
         DocumentReference docRef = database.collection("Users").document(userEmailAdress);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -82,12 +105,12 @@ public class ItogActivity extends AppCompatActivity {
         TextView hardnessInfo = findViewById(R.id.hardnessinfo);
         hardnessInfo.setText("Сложность: "+ difficulty);
         Bitmap created = Bitmap.createBitmap(getpicture1.w, getpicture1.h, Bitmap.Config.RGB_565);
-        Bitmap drawn = Bitmap.createBitmap((getpicture1.w/2)+1, (getpicture1.h/2)+1, Bitmap.Config.RGB_565);
+        drawn = Bitmap.createBitmap((getpicture1.w/2)+1, (getpicture1.h/2)+1, Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(created);
         Canvas canvaz = new Canvas();
         canvas.drawColor(Color.WHITE);
         canvas = shapesList.createCanvas(20, created);
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(created, (getpicture1.w/2)+1, (getpicture1.h/2)+1, false);
+        scaledBitmap = Bitmap.createScaledBitmap(created, (getpicture1.w/2)+1, (getpicture1.h/2)+1, false);
         boolean[][] pic = new boolean[getpicture1.w][getpicture1.h];
         for(i=0;i<getpicture1.w;i++){
             for(j=0;j<getpicture1.h;j++){
@@ -132,6 +155,16 @@ public class ItogActivity extends AppCompatActivity {
                 }
             }
         }
+        new Thread(new Runnable() {
+            public void run() {
+                baos1=new ByteArrayOutputStream();
+                baos2=new ByteArrayOutputStream();
+                scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos1);
+                drawn.compress(Bitmap.CompressFormat.JPEG, 100, baos2);
+                image1data = baos1.toByteArray();
+                image2data = baos2.toByteArray();
+                isReady++;
+            }}).start();
         ImageView createdimage = findViewById(R.id.created);
         ImageView drawnimage = findViewById(R.id.drawn);
         createdimage.setImageBitmap(scaledBitmap);
@@ -152,6 +185,7 @@ public class ItogActivity extends AppCompatActivity {
         data.put(""+numberOfGames+"Date", timeStamp);
         data.put(""+numberOfGames+"Difficulty", difficulty);
         database.collection("Users").document(userEmailAdress).set(data, SetOptions.merge());
+        isReady++;
     }
 
     public void onBackPressed() {
@@ -162,6 +196,90 @@ public class ItogActivity extends AppCompatActivity {
     }
 
     public void backToMenuMethod(View view) {
+        if(isReady>=2){
+            UploadTask uploadTask1 = storageRef.child(""+numberOfGames+"Drawn").putBytes(image2data);
+            uploadTask1.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    // ...
+                }
+            });
+            Task<Uri> urlTask1 = uploadTask1.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return storageRef.child(""+numberOfGames+"Drawn").getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        imagesData.put(""+numberOfGames+"Drawn", downloadUri.toString());
+                    } else {
+                        // Handle failures
+                        // ...
+                    }
+                    isUploaded++;
+                    if(isUploaded==2){
+                        intentMethod();
+                    };
+                }
+            });
+            UploadTask uploadTask2 = storageRef.child(""+numberOfGames+"Created").putBytes(image1data);
+            uploadTask2.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    // ...
+                }
+            });
+            Task<Uri> urlTask2 = uploadTask2.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return storageRef.child(""+numberOfGames+"Created").getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        imagesData.put(""+numberOfGames+"Created", downloadUri.toString());
+                    } else {
+                        // Handle failures
+                        // ...
+                    }
+                    isUploaded++;
+                    if(isUploaded==2){
+                        intentMethod();
+                    };
+                }
+            });
+        };
+    }
+
+    public void intentMethod(){
+        database.collection("Users").document(userEmailAdress).set(imagesData, SetOptions.merge());
         Intent MainActivity = new Intent(ItogActivity.this, MainActivity.class);
         startActivity(MainActivity);
     }

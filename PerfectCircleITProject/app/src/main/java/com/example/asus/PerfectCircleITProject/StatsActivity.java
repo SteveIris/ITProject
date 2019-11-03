@@ -2,6 +2,8 @@ package com.example.asus.PerfectCircleITProject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -16,6 +18,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,14 +36,18 @@ public class StatsActivity extends AppCompatActivity {
     private int numberOfGames;
     private ArrayList <OneGameCard> oneGameCards;
     private String userEmailAdress;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
         auth=FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
         database = FirebaseFirestore.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         userEmailAdress =user.getEmail().substring(0, user.getEmail().indexOf("."));
+        storageRef = storage.getReference().child(userEmailAdress);
         oneGameCards = new ArrayList<>();
         Log.d("DatabaseNews", "Hell");
         DocumentReference docRef = database.collection("Users").document(userEmailAdress);
@@ -72,7 +80,7 @@ public class StatsActivity extends AppCompatActivity {
         numberOfGames=Integer.parseInt((String)data.get("numberOfGames"));
         Log.d("DatabaseNews", ""+numberOfGames);
         for(i=1;i<=numberOfGames;i++){
-            oneGameCards.add(new OneGameCard("Сложность: "+data.get(""+i+"Difficulty"), "Дата: " +data.get(""+i+"Date"), "Оценка: " +data.get(""+i+"Mark")));
+            oneGameCards.add(new OneGameCard(""+data.get(""+i+"Created"),""+data.get(""+i+"Drawn"),"Сложность: "+data.get(""+i+"Difficulty"), "Дата: " +data.get(""+i+"Date"), "Оценка: " +data.get(""+i+"Mark")));
         };
         listOfGames=findViewById(R.id.listofgames);
         adapter = new RecyclerViewAdapter(oneGameCards);
