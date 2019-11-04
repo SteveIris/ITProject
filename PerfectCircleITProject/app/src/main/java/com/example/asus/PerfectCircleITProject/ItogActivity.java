@@ -9,6 +9,7 @@ import android.graphics.Color;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -62,6 +63,9 @@ public class ItogActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageRef;
     private Map<String, String> imagesData;
+    private ImageView drawnimage;
+    private ImageView createdimage;
+    private int widthOfImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,20 +159,21 @@ public class ItogActivity extends AppCompatActivity {
                 }
             }
         }
+        createdimage = findViewById(R.id.created);
+        drawnimage = findViewById(R.id.drawn);
+        createdimage.setImageBitmap(scaledBitmap);
+        drawnimage.setImageBitmap(drawn);
+        widthOfImage=scaledBitmap.getWidth();
         new Thread(new Runnable() {
             public void run() {
                 baos1=new ByteArrayOutputStream();
                 baos2=new ByteArrayOutputStream();
-                scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos1);
-                drawn.compress(Bitmap.CompressFormat.JPEG, 100, baos2);
+                ((BitmapDrawable)createdimage.getDrawable()).getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, baos1);
+                ((BitmapDrawable)drawnimage.getDrawable()).getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, baos2);
                 image1data = baos1.toByteArray();
                 image2data = baos2.toByteArray();
                 isReady++;
             }}).start();
-        ImageView createdimage = findViewById(R.id.created);
-        ImageView drawnimage = findViewById(R.id.drawn);
-        createdimage.setImageBitmap(scaledBitmap);
-        drawnimage.setImageBitmap(drawn);
         //mark = new String();
         //TextView ocenka = findViewById(R.id.ozenka);
         //mark = (ocenka.getText()).toString();

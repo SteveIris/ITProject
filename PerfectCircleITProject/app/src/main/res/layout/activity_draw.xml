@@ -36,7 +36,7 @@
     <view
         android:id="@+id/drawSpace"
         class="com.example.asus.PerfectCircleITProject.DrawActivity$GraphicsView"
-        android:layout_width="411dp"
+        android:layout_width="match_parent"
         android:layout_height="581dp"></view>
 
 </LinearLayout>

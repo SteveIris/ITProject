@@ -85,44 +85,44 @@ public class LoginActivity extends AppCompatActivity {
 
     private void userSignIn(String email, String password) {
         if (isRegistering) {
-            auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.d("loginACC", "createUserWithEmail:success");
-                                FirebaseUser user = auth.getCurrentUser();
-                                MyUser newUser = new MyUser();
-                                newUser.emailAdress=user.getEmail();
-                                newUser.login=loginEditText.getText().toString().trim();
-                                userEmailAdress = new String();
-                                userEmailAdress=user.getEmail();
-                                userEmailAdress=userEmailAdress.substring(0, userEmailAdress.indexOf("."));
-                                Map<String, String> data = new HashMap<>();
-                                data.put("name", newUser.login);
-                                data.put("numberOfGames", "0");
-                                //userData.child(userEmailAdress).child("name").setValue(newUser.login);
-                                newUser.emailWithoutCom=userEmailAdress;
-                                //userData.child(userEmailAdress).child("numberOfGames").setValue("0");
-                                database.collection("Users").document(userEmailAdress).set(data, SetOptions.merge());
-                                Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(mainActivity);
-                            } else {
-                                Log.d("loginACC", "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
+            if (password.length() > 5) {
+                auth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d("loginACC", "createUserWithEmail:success");
+                                    FirebaseUser user = auth.getCurrentUser();
+                                    MyUser newUser = new MyUser();
+                                    newUser.emailAdress = user.getEmail();
+                                    newUser.login = loginEditText.getText().toString().trim();
+                                    userEmailAdress = new String();
+                                    userEmailAdress = user.getEmail();
+                                    userEmailAdress = userEmailAdress.substring(0, userEmailAdress.indexOf("."));
+                                    Map<String, String> data = new HashMap<>();
+                                    data.put("name", newUser.login);
+                                    data.put("numberOfGames", "0");
+                                    newUser.emailWithoutCom = userEmailAdress;
+                                    database.collection("Users").document(userEmailAdress).set(data, SetOptions.merge());
+                                    Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(mainActivity);
+                                } else {
+                                    Log.d("loginACC", "createUserWithEmail:failure", task.getException());
+                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
                             }
-
-                            // ...
-                        }
-                    });
+                        });
+            } else {
+                Toast.makeText(LoginActivity.this, "Пароль должен быть длиннее 5 символов!",
+                        Toast.LENGTH_SHORT).show();
+            }
         } else {
             auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
                                 Log.d("loginACC", "signInWithEmail:success");
                                 Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(mainActivity);
@@ -131,10 +131,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.d("loginACC", "signInWithEmail:failure", task.getException());
                                 Toast.makeText(LoginActivity.this, "Неправильная почта или пароль!",
                                         Toast.LENGTH_SHORT).show();
-                                //updateUI(null);
                             }
-
-                            // ...
                         }
                     });
         };

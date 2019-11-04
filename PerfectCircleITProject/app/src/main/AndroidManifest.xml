@@ -9,11 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".OneGameActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".ChooseWayActivity" />
-
         <activity android:name=".CameraActivity" />
-
         <activity android:name=".StatsActivity" />
         <activity android:name=".ItogActivity" />
         <activity android:name=".CreateImageActivity" />
@@ -26,6 +25,7 @@
         </activity>
         <activity android:name=".ChooseLevelActivity" />
         <activity android:name=".DrawActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.android.fileprovider"

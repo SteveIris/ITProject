@@ -3,9 +3,12 @@ package com.example.asus.PerfectCircleITProject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +27,8 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.opencensus.stats.Stats;
 
 public class StatsActivity extends AppCompatActivity {
 
@@ -80,12 +85,27 @@ public class StatsActivity extends AppCompatActivity {
         numberOfGames=Integer.parseInt((String)data.get("numberOfGames"));
         Log.d("DatabaseNews", ""+numberOfGames);
         for(i=1;i<=numberOfGames;i++){
-            oneGameCards.add(new OneGameCard(""+data.get(""+i+"Created"),""+data.get(""+i+"Drawn"),"Сложность: "+data.get(""+i+"Difficulty"), "Дата: " +data.get(""+i+"Date"), "Оценка: " +data.get(""+i+"Mark")));
+            if(!data.get(""+i+"Date").equals("DELETED")){
+                oneGameCards.add(new OneGameCard(""+data.get(""+i+"Created"),""+data.get(""+i+"Drawn"),"Сложность: "+data.get(""+i+"Difficulty"), "Дата: " +data.get(""+i+"Date"), "Оценка: " +data.get(""+i+"Mark")));
+            };
         };
         listOfGames=findViewById(R.id.listofgames);
         adapter = new RecyclerViewAdapter(oneGameCards);
         layoutManager=new LinearLayoutManager(this);
         listOfGames.setAdapter(adapter);
         listOfGames.setLayoutManager(layoutManager);
+        listOfGames.addOnItemTouchListener(
+                new RecyclerItemClickListener(this, listOfGames ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        Intent oneGameActivity = new Intent(StatsActivity.this, OneGameActivity.class);
+                        oneGameActivity.putExtra("position", position+1);
+                        startActivity(oneGameActivity);
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        //Nothing
+                    }
+                })
+        );
     }
 }
