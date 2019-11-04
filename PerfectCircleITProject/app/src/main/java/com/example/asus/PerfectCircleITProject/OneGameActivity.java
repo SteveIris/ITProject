@@ -4,11 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.transition.Transition;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +31,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,9 +47,12 @@ public class OneGameActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private int position;
     private boolean isDataReady=false;
+    private ImageView secondImage;
+    private Map<String, Object> data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_one_game);
         database = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -71,7 +84,7 @@ public class OneGameActivity extends AppCompatActivity {
     }
 
     private void fillLayout() {
-        Map<String, Object> data = new HashMap<>();
+        data = new HashMap<>();
         data = userDoc.getData();
         while(data.get(""+position+"Date").equals("DELETED")){
           position++;
@@ -80,13 +93,11 @@ public class OneGameActivity extends AppCompatActivity {
         TextView dateText = findViewById(R.id.date);
         TextView markText = findViewById(R.id.mark);
         final ImageView firstImage = findViewById(R.id.createdImage);
-        ImageView secondImage = findViewById(R.id.drawnImage);
+        secondImage = findViewById(R.id.drawnImage);
         int width = secondImage.getWidth();
         difficultyText.setText("Сложность: "+data.get(""+position+"Difficulty"));
         dateText.setText("Дата: "+data.get(""+position+"Date"));
         markText.setText("Оценка: "+data.get(""+position+"Mark"));
-        Bitmap firstImageBitmap;
-        Bitmap secondImageBitmap;
         Glide.with(firstImage.getContext()).load(data.get(""+position+"Created")).into(firstImage);
         Glide.with(secondImage.getContext()).load(data.get(""+position+"Drawn")).into(secondImage);
     }
@@ -99,5 +110,9 @@ public class OneGameActivity extends AppCompatActivity {
             Intent historyActivity = new Intent(OneGameActivity.this, StatsActivity.class);
             startActivity(historyActivity);
         };
+    }
+
+    public void shareGameMethod(View view) {
+
     }
 }

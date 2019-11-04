@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class StatsActivity extends AppCompatActivity {
     private String userEmailAdress;
     private FirebaseStorage storage;
     private StorageReference storageRef;
+    private int[] positionData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,13 +81,16 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private void updateRecyclerView() {
-        int i;
+        int i, c=0;
         Map<String, Object> data = new HashMap<>();
         data=userDoc.getData();
         numberOfGames=Integer.parseInt((String)data.get("numberOfGames"));
+        positionData= new int[numberOfGames+1];
         Log.d("DatabaseNews", ""+numberOfGames);
         for(i=1;i<=numberOfGames;i++){
             if(!data.get(""+i+"Date").equals("DELETED")){
+                c++;
+                positionData[c]=i;
                 oneGameCards.add(new OneGameCard(""+data.get(""+i+"Created"),""+data.get(""+i+"Drawn"),"Сложность: "+data.get(""+i+"Difficulty"), "Дата: " +data.get(""+i+"Date"), "Оценка: " +data.get(""+i+"Mark")));
             };
         };
@@ -98,7 +103,7 @@ public class StatsActivity extends AppCompatActivity {
                 new RecyclerItemClickListener(this, listOfGames ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
                         Intent oneGameActivity = new Intent(StatsActivity.this, OneGameActivity.class);
-                        oneGameActivity.putExtra("position", position+1);
+                        oneGameActivity.putExtra("position", positionData[position]+1);
                         startActivity(oneGameActivity);
                     }
 
