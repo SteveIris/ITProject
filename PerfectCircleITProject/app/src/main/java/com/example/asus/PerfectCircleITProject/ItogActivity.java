@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -137,21 +138,8 @@ public class ItogActivity extends AppCompatActivity {
                 ocenka = findViewById(R.id.ozenka);
                 mark = (ocenka.getText()).toString();
             }}).start();
-        /*Paint paint = new Paint ();
-        paint.setAntiAlias(true);
-        paint.setStrokeWidth(20);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeCap(Paint.Cap.ROUND);
-        paint.setColor(Color.BLACK);
-        canvas.drawRect(shapesList.rectangleL, shapesList.rectangleT, shapesList.rectangleR, shapesList.rectangleB,  paint);*/
         for(i=0;i<getpicture1.w;i++){
             for(j=0;j<getpicture1.h;j++){
-                /*if(getpicture1.picture1[i][j]){
-                    created.setPixel(i/2, j/2, Color.BLACK);
-                } else {
-                    created.setPixel(i/2, j/2, Color.WHITE);
-                }*/
                 if(getpicture1.picture2[i][j]){
                     drawn.setPixel(i/2, j/2, Color.BLACK);
                 } else {
@@ -174,9 +162,6 @@ public class ItogActivity extends AppCompatActivity {
                 image2data = baos2.toByteArray();
                 isReady++;
             }}).start();
-        //mark = new String();
-        //TextView ocenka = findViewById(R.id.ozenka);
-        //mark = (ocenka.getText()).toString();
     }
 
     public void updateDatabase(){
@@ -201,18 +186,19 @@ public class ItogActivity extends AppCompatActivity {
     }
 
     public void backToMenuMethod(View view) {
+        Log.d("isReady", ""+isReady);
         if(isReady>=2){
             UploadTask uploadTask1 = storageRef.child(""+numberOfGames+"Drawn").putBytes(image2data);
             uploadTask1.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-
+                    Toast.makeText(ItogActivity.this, "Ошибка подключения!",
+                            Toast.LENGTH_SHORT).show();
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                    // ...
+
                 }
             });
             Task<Uri> urlTask1 = uploadTask1.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -221,8 +207,6 @@ public class ItogActivity extends AppCompatActivity {
                     if (!task.isSuccessful()) {
                         throw task.getException();
                     }
-
-                    // Continue with the task to get the download URL
                     return storageRef.child(""+numberOfGames+"Drawn").getDownloadUrl();
                 }
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
@@ -232,8 +216,6 @@ public class ItogActivity extends AppCompatActivity {
                         Uri downloadUri = task.getResult();
                         imagesData.put(""+numberOfGames+"Drawn", downloadUri.toString());
                     } else {
-                        // Handle failures
-                        // ...
                     }
                     isUploaded++;
                     if(isUploaded==2){
@@ -245,13 +227,12 @@ public class ItogActivity extends AppCompatActivity {
             uploadTask2.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-
+                    Toast.makeText(ItogActivity.this, "Ошибка подключения!",
+                            Toast.LENGTH_SHORT).show();
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                    // ...
                 }
             });
             Task<Uri> urlTask2 = uploadTask2.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -271,8 +252,6 @@ public class ItogActivity extends AppCompatActivity {
                         Uri downloadUri = task.getResult();
                         imagesData.put(""+numberOfGames+"Created", downloadUri.toString());
                     } else {
-                        // Handle failures
-                        // ...
                     }
                     isUploaded++;
                     if(isUploaded==2){

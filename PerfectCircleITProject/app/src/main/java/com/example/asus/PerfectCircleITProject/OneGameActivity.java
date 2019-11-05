@@ -124,7 +124,6 @@ public class OneGameActivity extends AppCompatActivity {
             Map<String, String> data = new HashMap<>();
             data.put(""+position+"Date", "DELETED");
             database.collection("Users").document(userEmailAdress).set(data, SetOptions.merge());
-            //DELETE
             Intent historyActivity = new Intent(OneGameActivity.this, StatsActivity.class);
             startActivity(historyActivity);
     }

@@ -50,7 +50,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder recyclerViewHolder, int i) {
          OneGameCard oneGameCard = arrayList.get(i);
-         // HERE YOU SHOULD GET RESOURCES FOR YOUR IMAGES
         recyclerViewHolder.difficultyText.setText(oneGameCard.getDifficultyText());
         recyclerViewHolder.markText.setText(oneGameCard.getMarkText());
         recyclerViewHolder.dateText.setText(oneGameCard.getDateText());

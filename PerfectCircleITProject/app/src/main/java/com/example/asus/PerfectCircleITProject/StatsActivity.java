@@ -78,7 +78,6 @@ public class StatsActivity extends AppCompatActivity {
                 }
             }
         });
-        //oneGameCards.add(new OneGameCard("Test", "Test", "Testing"));
     }
 
     private void updateRecyclerView() {

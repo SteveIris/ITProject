@@ -84,14 +84,14 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
-        if (preferences.getBoolean("isFirstRun2", true)) {
+        if (preferences.getBoolean("IsItFirstRun", true)) {
             if(isDataReady) {
                 showNewsMessage();
                 askCameraPermission();
                 showWelcomeMessage();
             };
             isFirstTime=true;
-            preferences.edit().putBoolean("isFirstRun2", false).commit();
+            preferences.edit().putBoolean("IsItFirstRun", false).commit();
         }
     }
 
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         explanationWindow.setNegativeButton("Да",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //LolNothingHappensAgain
+                        //NothingHappens
                     }
                 });
         explanationWindow.setPositiveButton("Нет",

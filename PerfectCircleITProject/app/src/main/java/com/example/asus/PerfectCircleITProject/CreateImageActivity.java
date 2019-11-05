@@ -26,7 +26,7 @@ public class CreateImageActivity extends AppCompatActivity {
     TextView timeLeftText;
     MyCountDownTimer timer;
     static String difficulty;
-    static String dawae;
+    static String theWay;
     static public Bitmap imageBitmap;
     static public Canvas imageCanvas;
     static public CreatedImageShapes shapesList;
@@ -38,7 +38,7 @@ public class CreateImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_image);
         shapesList = new CreatedImageShapes();
         Intent receivedFromChooseWay = getIntent();
-        dawae = receivedFromChooseWay.getStringExtra("TheWayYouDraw");
+        theWay = receivedFromChooseWay.getStringExtra("TheWayYouDraw");
         difficulty = receivedFromChooseWay.getStringExtra("LevelHardness");
         timeLeftText =findViewById(R.id.sekunda);
         timer = new MyCountDownTimer(10000, 1000);
@@ -208,29 +208,11 @@ public class CreateImageActivity extends AppCompatActivity {
         }
 
         public void onFinish (){
-            /*boolean[][] pic = new boolean[imageBitmap.getWidth()][imageBitmap.getHeight()];
-            int i, j;
-            for(i=0; i< imageBitmap.getWidth(); i++){
-                for(j=0; j< imageBitmap.getHeight(); j++){
-                    if(imageBitmap.getPixel(i, j)==Color.BLACK){
-                        pic[i][j]=true;
-                    } else {
-                        pic[i][j]=false;
-                    }
-                }
-            }
-            ImageProcessor holder = new ImageProcessor();
-            holder.w= imageBitmap.getWidth();
-            holder.h= imageBitmap.getHeight();
-            holder.picture1=pic;
-            //DrawActivity.putExtra("width", imageBitmap.getWidth());
-            //DrawActivity.putExtra("height", imageBitmap.getHeight());
-            //DrawActivity.putExtra("boo", pic); */
             ImageProcessor holder = new ImageProcessor();
             holder.w = imageBitmap.getWidth();
             holder.h = imageBitmap.getHeight();
             Log.d("AHA", imageBitmap.getWidth()+ " "+imageBitmap.getHeight());
-            if(dawae.equals("Camera")){
+            if(theWay.equals("Camera")){
                 Intent cameraActivity = new Intent(CreateImageActivity.this, CameraActivity.class);
                 cameraActivity.putExtra("LevelHardness", difficulty);
                 cameraActivity.putExtra("ShapesList", shapesList);

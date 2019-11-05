@@ -47,8 +47,6 @@ public class LoginActivity extends AppCompatActivity {
         signInButton = findViewById(R.id.signInButton);
         iAlreadyHaveAccountText = findViewById(R.id.iAlreadyHaveAnAccount);
         database = FirebaseFirestore.getInstance();
-        //REMOVETHIS
-        //userData.child("e").child("name").setValue("login");
         if(auth.getCurrentUser()!=null){
             Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(mainActivity);

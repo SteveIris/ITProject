@@ -33,7 +33,7 @@ public class DrawActivity extends AppCompatActivity {
         finishWindow.setMessage("Вы уверены, что хотите завершить?");
         finishWindow.setNegativeButton("Нет", new DialogInterface.OnClickListener(){
             public void onClick(DialogInterface dialog, int arg1) {
-                //LiterallyNothingHappens!
+                //NothingHappens!
             }
         });
         finishWindow.setPositiveButton("Да", new DialogInterface.OnClickListener(){

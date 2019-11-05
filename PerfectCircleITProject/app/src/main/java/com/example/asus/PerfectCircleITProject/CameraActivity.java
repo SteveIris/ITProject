@@ -36,10 +36,15 @@ public class CameraActivity extends AppCompatActivity {
         difficulty=receivedFromCreateImage.getStringExtra("LevelHardness");
         shapesList=(CreatedImageShapes) receivedFromCreateImage.getSerializableExtra("ShapesList");
         image = findViewById(R.id.pikcha);
-        //Log.d("Sohowlongisit", image.getMaxWidth()+" "+image.getMaxHeight());
         currentPhotoPath = new String();
         dispatchTakePictureIntent();
-        //setPic();
+    }
+
+    public void onBackPressed() {
+        /*
+        super.onBackPressed();
+        nothingHappens!
+        */
     }
 
     private File createImageFile() throws IOException {
@@ -47,9 +52,9 @@ public class CameraActivity extends AppCompatActivity {
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                imageFileName,
+                ".jpg",
+                storageDir
         );
         currentPhotoPath = image.getAbsolutePath();
         return image;
@@ -58,7 +63,6 @@ public class CameraActivity extends AppCompatActivity {
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
             File photoFile = null;
             try {
                 photoFile = createImageFile();
@@ -102,25 +106,5 @@ public class CameraActivity extends AppCompatActivity {
             startActivity(itogActivity);
         }
     }
-
-   /* private void setPic() {
-        int targetW = 1080;
-        int targetH = 1920;
-
-        bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-    }
-*/
 
 }
