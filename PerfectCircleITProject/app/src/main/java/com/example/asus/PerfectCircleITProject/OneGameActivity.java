@@ -2,9 +2,11 @@ package com.example.asus.PerfectCircleITProject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -56,6 +58,8 @@ public class OneGameActivity extends AppCompatActivity {
     private String pointsScored;
     private String difficulty;
     private String date;
+    private AlertDialog.Builder areYouSureWindow;
+    private String userLogin="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +84,6 @@ public class OneGameActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d("DatabaseNews", "DocumentSnapshot data: " + document.getData());
                         userDoc=document;
-                        isDataReady=true;
                         fillLayout();
                     } else {
                         Log.d("DatabaseNews", "No such document");
@@ -95,6 +98,7 @@ public class OneGameActivity extends AppCompatActivity {
     private void fillLayout() {
         data = new HashMap<>();
         data = userDoc.getData();
+        userLogin = data.get("name").toString();
         while(data.get(""+position+"Date").equals("DELETED")){
           position++;
         };
@@ -111,18 +115,39 @@ public class OneGameActivity extends AppCompatActivity {
         difficultyText.setText("Сложность: "+difficulty);
         dateText.setText("Дата: "+date);
         markText.setText("Оценка: "+pointsScored);
+        isDataReady=true;
         Glide.with(firstImage.getContext()).load(data.get(""+position+"Created")).into(firstImage);
         Glide.with(secondImage.getContext()).load(data.get(""+position+"Drawn")).into(secondImage);
     }
 
-    public void deleteGameMethod(View view) {
-        if(isDataReady) {
+    public void deleteGameMethod() {
             Map<String, String> data = new HashMap<>();
             data.put(""+position+"Date", "DELETED");
             database.collection("Users").document(userEmailAdress).set(data, SetOptions.merge());
             //DELETE
             Intent historyActivity = new Intent(OneGameActivity.this, StatsActivity.class);
             startActivity(historyActivity);
+    }
+
+    public void askBeforeDeleteMethod (View view){
+        if(isDataReady) {
+            areYouSureWindow = new AlertDialog.Builder(OneGameActivity.this);
+            areYouSureWindow.setTitle(userLogin + ", Вы уверены, что хотите удалить этот раунд?");
+            areYouSureWindow.setMessage("Удалённые раунды нельзя будет восстановить! \n" +
+                    "Примечание: все данные хранятся на сервере, а не на устройстве, поэтому удалив раунд, вы не освободите память на устройстве");
+            areYouSureWindow.setNegativeButton("Да",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            deleteGameMethod();
+                        }
+                    });
+            areYouSureWindow.setPositiveButton("Нет",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+            areYouSureWindow.show();
         };
     }
 
@@ -130,16 +155,19 @@ public class OneGameActivity extends AppCompatActivity {
         if(isDataReady) {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
-            if(difficulty.equals("Hard")){
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "Я набрал "+pointsScored+" баллов на сложном уровне в Perfect Circle!");
-            };
-            if(difficulty.equals("Easy")){
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "Я набрал "+pointsScored+" баллов на лёгком уровне в Perfect Circle!");
-            };
-            if(difficulty.equals("Medium")){
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "Я набрал "+pointsScored+" баллов на среднем уровне в Perfect Circle!");
-            };
+            if (difficulty.equals("Hard")) {
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Я набрал " + pointsScored + " баллов на сложном уровне в Perfect Circle!");
+            }
+            ;
+            if (difficulty.equals("Easy")) {
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Я набрал " + pointsScored + " баллов на лёгком уровне в Perfect Circle!");
+            }
+            ;
+            if (difficulty.equals("Medium")) {
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Я набрал " + pointsScored + " баллов на среднем уровне в Perfect Circle!");
+            }
+            ;
             startActivity(Intent.createChooser(shareIntent, "Выберите приложение:"));
-        }
+        };
     }
 }

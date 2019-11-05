@@ -84,14 +84,14 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
-        if (preferences.getBoolean("isFirstRun0", true)) {
+        if (preferences.getBoolean("isFirstRun2", true)) {
             if(isDataReady) {
                 showNewsMessage();
                 askCameraPermission();
                 showWelcomeMessage();
             };
             isFirstTime=true;
-            preferences.edit().putBoolean("isfirsttime1", false).commit();
+            preferences.edit().putBoolean("isFirstRun2", false).commit();
         }
     }
 
@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
         welcomeWindow.setMessage("1. Подразумевается, что при работе с приложением у вас есть доступ в интернет, " +
                 "если это не так, ваши данные не будут сохранены, а в работе приложения возможны сбои. \n" +
                 "2. Приложение, прежде чем сравнивать изображения, переводит их в чёрно-белый " +
-                "вид, причём каждый пиксель становится либо белым, либо чёрным. Поэтому рисунок " +
-                "стоит делать на белом листе бумаги, а фотографировать его стоит на чёрном фоне.\n" +
+                "вид, причём каждый пиксель становится либо белым, либо чёрным. Поэтому рисунок стоит " +
+                "делать на белом листе бумаги, и фотографировать его стоит также на белом (светлом) фоне.\n" +
                 "3. Пропорции даваемого вам изображения соответстуют отношению сторон " +
                 "листа А4, поэтому рисовать нужно на листе с таким же отношением сторон " +
                 "(Тот же А4, А5 и т.д.), желательно на А4.\n" +
@@ -121,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void showNewsMessage (){
         newsWindow = new AlertDialog.Builder(MainActivity.this);
-        newsWindow.setTitle(userLogin + ", хотите получать уведомления об обновлениях приложения? ");
+        newsWindow.setTitle("Обновления");
+        newsWindow.setMessage(userLogin + ", хотите получать новости об обновлениях приложения?");
         newsWindow.setNegativeButton("Да",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

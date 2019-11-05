@@ -25,6 +25,6 @@
         android:backgroundTint="#F44336"
         android:text="Удалить все раунды"
         android:textSize="29sp"
-        android:onClick="deleteAllMethod"></Button>
+        android:onClick="areYouSureMethod"></Button>
 
 </LinearLayout>

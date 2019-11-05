@@ -1,13 +1,13 @@
 package com.example.asus.PerfectCircleITProject;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,8 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.opencensus.stats.Stats;
-
 public class StatsActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
@@ -46,6 +44,8 @@ public class StatsActivity extends AppCompatActivity {
     private StorageReference storageRef;
     private int[] positionData;
     private boolean isDataReady=false;
+    private AlertDialog.Builder areYouSureWindow;
+    private String userLogin="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +85,7 @@ public class StatsActivity extends AppCompatActivity {
         int i, c=0;
         Map<String, Object> data = new HashMap<>();
         data=userDoc.getData();
+        userLogin=data.get("name").toString();
         numberOfGames=Integer.parseInt((String)data.get("numberOfGames"));
         positionData= new int[numberOfGames+1];
         Log.d("DatabaseNews", ""+numberOfGames);
@@ -119,13 +120,33 @@ public class StatsActivity extends AppCompatActivity {
         );
     }
 
-    public void deleteAllMethod(View view) {
-        if(isDataReady&&numberOfGames!=0){
+    public void areYouSureMethod (View view){
+        if(isDataReady&&numberOfGames!=0) {
+            areYouSureWindow = new AlertDialog.Builder(StatsActivity.this);
+            areYouSureWindow.setTitle(userLogin + ", Вы уверены, что хотите удалить все раунды?");
+            areYouSureWindow.setMessage("Удалённые раунды нельзя будет восстановить! \n" +
+                    "Примечание: все данные хранятся на сервере, а не на устройстве, поэтому удалив раунды, вы не освободите память на устройстве");
+            areYouSureWindow.setNegativeButton("Да",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            deleteAllMethod();
+                        }
+                    });
+            areYouSureWindow.setPositiveButton("Нет",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+            areYouSureWindow.show();
+        };
+    }
+
+    public void deleteAllMethod() {
             Map<String, String> data = new HashMap<>();
             data.put("numberOfGames", "0");
             database.collection("Users").document(userEmailAdress).set(data, SetOptions.merge());
             Intent mainActivity = new Intent(StatsActivity.this, MainActivity.class);
             startActivity(mainActivity);
-        }
     }
 }
