@@ -13,10 +13,12 @@ public class CreatedImageShapes implements Serializable {
     boolean isRectangle=false;
     boolean isTriangle=false;
     boolean isQuadrangle=false;
+    boolean isPentagon=false;
     int rectangleL, rectangleR, rectangleB, rectangleT;
     int circleRadius, circleX, circleY;
     int triangleX1, triangleY1, triangleX2, triangleY2, triangleX3, triangleY3;
     int quadrangleX1, quadrangleY1, quadrangleX2, quadrangleY2, quadrangleX3, quadrangleY3, quadrangleX4, quadrangleY4;
+    int pentagonRadius, pentagonCenterX, pentagonCenterY;
 
     public Canvas createCanvas (int strokeWidth, Bitmap bitmap){
         Canvas canvas = new Canvas(bitmap);
@@ -50,6 +52,16 @@ public class CreatedImageShapes implements Serializable {
             quadranglePath.lineTo(quadrangleX4, quadrangleY4);
             quadranglePath.lineTo(quadrangleX1, quadrangleY1);
             canvas.drawPath(quadranglePath, paint);
+        }
+        if(isPentagon){
+            Path pentagonPath = new Path();
+            pentagonPath.moveTo(pentagonCenterX+pentagonRadius, pentagonCenterY);
+            pentagonPath.lineTo(Math.round(pentagonCenterX+Math.cos(2*Math.PI/5)*pentagonRadius), Math.round(pentagonCenterY+Math.sin(2*Math.PI/5)*pentagonRadius));
+            pentagonPath.lineTo(Math.round(pentagonCenterX+Math.cos(4*Math.PI/5)*pentagonRadius), Math.round(pentagonCenterY+Math.sin(4*Math.PI/5)*pentagonRadius));
+            pentagonPath.lineTo(Math.round(pentagonCenterX+Math.cos(6*Math.PI/5)*pentagonRadius), Math.round(pentagonCenterY+Math.sin(6*Math.PI/5)*pentagonRadius));
+            pentagonPath.lineTo(Math.round(pentagonCenterX+Math.cos(8*Math.PI/5)*pentagonRadius), Math.round(pentagonCenterY+Math.sin(8*Math.PI/5)*pentagonRadius));
+            pentagonPath.lineTo(pentagonCenterX+pentagonRadius, pentagonCenterY);
+            canvas.drawPath(pentagonPath, paint);
         }
         return canvas;
     }

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -45,6 +45,7 @@ public class StatsActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageRef;
     private int[] positionData;
+    private boolean isDataReady=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +92,10 @@ public class StatsActivity extends AppCompatActivity {
             if(!data.get(""+i+"Date").equals("DELETED")){
                 c++;
                 positionData[c]=i;
-                oneGameCards.add(new OneGameCard(""+data.get(""+i+"Created"),""+data.get(""+i+"Drawn"),"Сложность: "+data.get(""+i+"Difficulty"), "Дата: " +data.get(""+i+"Date"), "Оценка: " +data.get(""+i+"Mark")));
+                String date;
+                date=(""+data.get(""+i+"Date"));
+                date=date.substring(0, 4)+"."+date.substring(4, 6)+"."+date.substring(6, 8);
+                oneGameCards.add(new OneGameCard(""+data.get(""+i+"Created"),""+data.get(""+i+"Drawn"),"Сложность: "+data.get(""+i+"Difficulty"), "Дата: " +date, "Оценка: " +data.get(""+i+"Mark")));
             };
         };
         listOfGames=findViewById(R.id.listofgames);
@@ -99,6 +103,7 @@ public class StatsActivity extends AppCompatActivity {
         layoutManager=new LinearLayoutManager(this);
         listOfGames.setAdapter(adapter);
         listOfGames.setLayoutManager(layoutManager);
+        isDataReady=true;
         listOfGames.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, listOfGames ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
@@ -112,5 +117,15 @@ public class StatsActivity extends AppCompatActivity {
                     }
                 })
         );
+    }
+
+    public void deleteAllMethod(View view) {
+        if(isDataReady&&numberOfGames!=0){
+            Map<String, String> data = new HashMap<>();
+            data.put("numberOfGames", "0");
+            database.collection("Users").document(userEmailAdress).set(data, SetOptions.merge());
+            Intent mainActivity = new Intent(StatsActivity.this, MainActivity.class);
+            startActivity(mainActivity);
+        }
     }
 }

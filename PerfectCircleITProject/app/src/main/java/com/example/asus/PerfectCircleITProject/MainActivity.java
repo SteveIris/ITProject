@@ -9,7 +9,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.content.*;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -17,6 +20,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     AlertDialog.Builder welcomeWindow;
@@ -25,8 +35,12 @@ public class MainActivity extends AppCompatActivity {
     AlertDialog.Builder explanationWindow;
     SharedPreferences preferences = null;
     private FirebaseAuth auth;
-    int denied=0;
-    private int numberOfGames;
+    private boolean isFirstTime=false;
+    private boolean isDataReady=false;
+    private FirebaseFirestore database;
+    private String userLogin="";
+    private DocumentSnapshot userDoc;
+    private String userEmailAdress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,30 +48,65 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         auth =FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-        MyUser currentUser = new MyUser();
+        userEmailAdress =user.getEmail().substring(0, user.getEmail().indexOf("."));
+        database = FirebaseFirestore.getInstance();
+        DocumentReference docRef = database.collection("Users").document(userEmailAdress);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        userDoc=document;
+                        updateUsername();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Ошибка загрузки данных",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                };
+            }
+        });
         preferences = getSharedPreferences("com.example.asus.PerfectCircleITProject", MODE_PRIVATE);
+    }
+
+    private void updateUsername() {
+        Map<String, Object> data = new HashMap<>();
+        data = userDoc.getData();
+        userLogin = data.get("name").toString();
+        if(isFirstTime){
+            showNewsMessage();
+            askCameraPermission();
+            showWelcomeMessage();
+        }
+        isDataReady=true;
     }
 
     protected void onResume() {
         super.onResume();
-        if (preferences.getBoolean("isfirsttime1", true)) {
-            showNewsMessage();
-            askCameraPermission();
-            showWelcomeMessage();
+        if (preferences.getBoolean("isFirstRun0", true)) {
+            if(isDataReady) {
+                showNewsMessage();
+                askCameraPermission();
+                showWelcomeMessage();
+            };
+            isFirstTime=true;
             preferences.edit().putBoolean("isfirsttime1", false).commit();
         }
     }
 
     public void showWelcomeMessage (){
         welcomeWindow = new AlertDialog.Builder(MainActivity.this);
-        welcomeWindow.setTitle("Несколько советов по работе с приложением:");
-        welcomeWindow.setMessage("1. Приложение, прежде чем сравнивать изображения, переводит их в чёрно-белый " +
+        welcomeWindow.setTitle(userLogin+", пожалуйста, прочитайте советы по работе с приложением:");
+        welcomeWindow.setMessage("1. Подразумевается, что при работе с приложением у вас есть доступ в интернет, " +
+                "если это не так, ваши данные не будут сохранены, а в работе приложения возможны сбои. \n" +
+                "2. Приложение, прежде чем сравнивать изображения, переводит их в чёрно-белый " +
                 "вид, причём каждый пиксель становится либо белым, либо чёрным. Поэтому рисунок " +
                 "стоит делать на белом листе бумаги, а фотографировать его стоит на чёрном фоне.\n" +
-                "2. Пропорции даваемого вам изображения соответстуют отношению сторон " +
+                "3. Пропорции даваемого вам изображения соответстуют отношению сторон " +
                 "листа А4, поэтому рисовать нужно на листе с таким же отношением сторон " +
                 "(Тот же А4, А5 и т.д.), желательно на А4.\n" +
-                "3. Учтите, что оценка изображения с камеры занимает больше времени, " +
+                "4. Учтите, что оценка изображения с камеры занимает больше времени, " +
                 "чем оценка изображения, нарисованного на экране. Также она может быть менее " +
                 "точной, так как неправильно могут определены границы листа или толщина " +
                 "вашего инструмента.");
@@ -72,18 +121,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void showNewsMessage (){
         newsWindow = new AlertDialog.Builder(MainActivity.this);
-        newsWindow.setTitle("Хотите получать уведомления об обновлениях приложения? ");
+        newsWindow.setTitle(userLogin + ", хотите получать уведомления об обновлениях приложения? ");
         newsWindow.setNegativeButton("Да",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //NothingHappens...
-                        //ForNow...
+                        Map<String, Object> data1 = new HashMap<>();
+                        data1.put("news", "true");
+                        database.collection("Users").document(userEmailAdress).set(data1, SetOptions.merge());
                     }
                 });
         newsWindow.setPositiveButton("Нет",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //NothingHappens...
+                        Map<String, Object> data1 = new HashMap<>();
+                        data1.put("news", "false");
+                        database.collection("Users").document(userEmailAdress).set(data1, SetOptions.merge());
                     }
                 });
         newsWindow.show();
@@ -91,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void askCameraPermission (){
         askCameraPermissionWindow = new AlertDialog.Builder(MainActivity.this);
-        askCameraPermissionWindow.setTitle("Разрешить приложению доступ к камере?");
+        askCameraPermissionWindow.setTitle(userLogin+", Разрешить приложению доступ к камере?");
         askCameraPermissionWindow.setNegativeButton("Да",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -109,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void explanation (){
         explanationWindow = new AlertDialog.Builder(MainActivity.this);
-        explanationWindow.setTitle("Разрешить приложению доступ к камере?");
+        explanationWindow.setTitle(userLogin+", Разрешить приложению доступ к камере?");
         explanationWindow.setMessage("Если у приложения не будет доступа к камере, вы потеряете возможность"+
                 "оценивать рисунки, нарисованные на бумаге. Разрешить доступ к камере?");
         explanationWindow.setNegativeButton("Да",

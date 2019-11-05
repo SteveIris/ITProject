@@ -30,6 +30,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -49,6 +51,11 @@ public class OneGameActivity extends AppCompatActivity {
     private boolean isDataReady=false;
     private ImageView secondImage;
     private Map<String, Object> data;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
+    private String pointsScored;
+    private String difficulty;
+    private String date;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +65,8 @@ public class OneGameActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         userEmailAdress = user.getEmail().substring(0, user.getEmail().indexOf("."));
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference().child(userEmailAdress);
         Intent receivedFromHistory = getIntent();
         position = receivedFromHistory.getIntExtra("position", 1);
         DocumentReference docRef = database.collection("Users").document(userEmailAdress);
@@ -95,9 +104,13 @@ public class OneGameActivity extends AppCompatActivity {
         final ImageView firstImage = findViewById(R.id.createdImage);
         secondImage = findViewById(R.id.drawnImage);
         int width = secondImage.getWidth();
-        difficultyText.setText("Сложность: "+data.get(""+position+"Difficulty"));
-        dateText.setText("Дата: "+data.get(""+position+"Date"));
-        markText.setText("Оценка: "+data.get(""+position+"Mark"));
+        pointsScored=""+data.get(""+position+"Mark");
+        difficulty=""+data.get(""+position+"Difficulty");
+        date=(""+data.get(""+position+"Date"));
+        date=date.substring(0, 4)+"."+date.substring(4, 6)+"."+date.substring(6, 8);
+        difficultyText.setText("Сложность: "+difficulty);
+        dateText.setText("Дата: "+date);
+        markText.setText("Оценка: "+pointsScored);
         Glide.with(firstImage.getContext()).load(data.get(""+position+"Created")).into(firstImage);
         Glide.with(secondImage.getContext()).load(data.get(""+position+"Drawn")).into(secondImage);
     }
@@ -107,12 +120,26 @@ public class OneGameActivity extends AppCompatActivity {
             Map<String, String> data = new HashMap<>();
             data.put(""+position+"Date", "DELETED");
             database.collection("Users").document(userEmailAdress).set(data, SetOptions.merge());
+            //DELETE
             Intent historyActivity = new Intent(OneGameActivity.this, StatsActivity.class);
             startActivity(historyActivity);
         };
     }
 
     public void shareGameMethod(View view) {
-
+        if(isDataReady) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            if(difficulty.equals("Hard")){
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Я набрал "+pointsScored+" баллов на сложном уровне в Perfect Circle!");
+            };
+            if(difficulty.equals("Easy")){
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Я набрал "+pointsScored+" баллов на лёгком уровне в Perfect Circle!");
+            };
+            if(difficulty.equals("Medium")){
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Я набрал "+pointsScored+" баллов на среднем уровне в Perfect Circle!");
+            };
+            startActivity(Intent.createChooser(shareIntent, "Выберите приложение:"));
+        }
     }
 }

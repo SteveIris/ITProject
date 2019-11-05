@@ -127,7 +127,6 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(mainActivity);
                             } else {
-                                // If sign in fails, display a message to the user.
                                 Log.d("loginACC", "signInWithEmail:failure", task.getException());
                                 Toast.makeText(LoginActivity.this, "Неправильная почта или пароль!",
                                         Toast.LENGTH_SHORT).show();

@@ -71,8 +71,9 @@ public class CreateImageActivity extends AppCompatActivity {
             };
             if(difficulty.equals("Hard")){
                 createCircle();
-                createQuadrangle();
+                createRectangle();
                 createTriangle();
+                createPentagon();
             };
 
         }
@@ -145,7 +146,7 @@ public class CreateImageActivity extends AppCompatActivity {
             int x, y, r;
             y = new Random().nextInt(imageBitmap.getHeight()-300)+150;
             x = new Random().nextInt(imageBitmap.getWidth()-300)+150;
-            r = new Random().nextInt(Math.min(Math.abs(y- imageBitmap.getHeight()), Math.min(Math.abs(x- imageBitmap.getWidth()), Math.min(y, x)))-100)+50;
+            r = new Random().nextInt(Math.min(Math.abs(y-imageBitmap.getHeight()), Math.min(Math.abs(x- imageBitmap.getWidth()), Math.min(y, x)))-100)+50;
             imageCanvas.drawCircle(x, y, r, paint);
             shapesList.circleX=x;
             shapesList.circleY=y;
@@ -178,6 +179,25 @@ public class CreateImageActivity extends AppCompatActivity {
             shapesList.quadrangleY2=y2;
             shapesList.quadrangleY3=y3;
             shapesList.quadrangleY4=y4;
+        }
+
+        public void createPentagon(){
+            shapesList.isPentagon=true;
+            int x, y, r;
+            Path put = new Path();
+            y = new Random().nextInt(imageBitmap.getHeight()-400)+200;
+            x = new Random().nextInt(imageBitmap.getWidth()-400)+200;
+            r = new Random().nextInt(Math.min(Math.abs(y-imageBitmap.getHeight()), Math.min(Math.abs(x-imageBitmap.getWidth()), Math.min(y, x)))-200)+100;
+            put.moveTo(x+r, y);
+            put.lineTo(Math.round(x+Math.cos(2*Math.PI/5)*r), Math.round(y+Math.sin(2*Math.PI/5)*r));
+            put.lineTo(Math.round(x+Math.cos(4*Math.PI/5)*r), Math.round(y+Math.sin(4*Math.PI/5)*r));
+            put.lineTo(Math.round(x+Math.cos(6*Math.PI/5)*r), Math.round(y+Math.sin(6*Math.PI/5)*r));
+            put.lineTo(Math.round(x+Math.cos(8*Math.PI/5)*r), Math.round(y+Math.sin(8*Math.PI/5)*r));
+            put.lineTo(x+r, y);
+            imageCanvas.drawPath(put, paint);
+            shapesList.pentagonCenterX=x;
+            shapesList.pentagonCenterY=y;
+            shapesList.pentagonRadius=r;
         }
 
     }

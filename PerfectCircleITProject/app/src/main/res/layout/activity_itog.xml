@@ -57,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginTop="160dp"
-        android:text="В главное меню"
+        android:text="Сохранить и выйти в главное меню"
         android:onClick="backToMenuMethod"/>
 
 </LinearLayout>
